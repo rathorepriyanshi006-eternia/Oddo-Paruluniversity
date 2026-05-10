@@ -1,17 +1,16 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { activities } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { supabase } from "@/lib/supabase";
 
 export async function PUT(request: Request) {
   try {
     const { items } = await request.json();
     
-    // items is an array of { id: string, orderIndex: number }
     for (const item of items) {
-      await db.update(activities)
-        .set({ orderIndex: item.orderIndex })
-        .where(eq(activities.id, item.id));
+      const { error } = await supabase
+        .from("activities")
+        .update({ order_index: item.orderIndex })
+        .eq("id", item.id);
+      if (error) throw error;
     }
 
     return NextResponse.json({ success: true, message: "Activities reordered" });
@@ -23,20 +22,40 @@ export async function PUT(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    
+
     const newActivity = {
-      id: `act_${Date.now()}`,
-      tripId: body.tripId,
+      trip_id: body.tripId,
       day: body.day || "Day 1",
-      type: body.type || "custom",
+      type: body.type || "sightseeing",
       title: body.title,
       time: body.time || "TBD",
-      orderIndex: body.orderIndex || 999
+      order_index: body.orderIndex ?? 999,
     };
 
-    await db.insert(activities).values(newActivity);
+    const { data, error } = await supabase
+      .from("activities")
+      .insert([newActivity])
+      .select()
+      .single();
 
-    return NextResponse.json({ success: true, data: newActivity });
+    if (error) {
+      console.error("Supabase insert activity error:", error);
+      throw new Error(error.message);
+    }
+
+    // Map back to camelCase for frontend
+    return NextResponse.json({
+      success: true,
+      data: {
+        id: data.id,
+        tripId: data.trip_id,
+        day: data.day,
+        type: data.type,
+        title: data.title,
+        time: data.time,
+        orderIndex: data.order_index,
+      },
+    });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

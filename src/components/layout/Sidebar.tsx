@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { 
   PlaneTakeoff, 
   LayoutDashboard, 
@@ -9,8 +9,10 @@ import {
   Wallet, 
   Settings, 
   Users,
-  Compass
+  Compass,
+  LogOut
 } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
 
 const navItems = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -23,6 +25,13 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
   return (
     <aside className="w-64 hidden lg:flex flex-col bg-background/50 backdrop-blur-xl border-r border-white/10 h-full">
@@ -37,7 +46,7 @@ export function Sidebar() {
         </Link>
       </div>
 
-      <nav className="flex-1 py-6 px-4 space-y-2">
+      <nav className="flex-1 py-6 px-4 space-y-1">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -57,18 +66,35 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="p-4 border-t border-white/5">
-        <div className="glass-panel p-4 rounded-xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-cyan-500/10" />
-          <div className="relative z-10 flex items-center gap-3">
-            <img src="https://i.pravatar.cc/150?img=11" alt="User" className="w-10 h-10 rounded-full border border-white/20" />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-white truncate">Marcus Chen</p>
-              <p className="text-xs text-zinc-400 truncate">Pro Plan</p>
+      <div className="p-4 border-t border-white/5 space-y-2">
+        {/* User Card */}
+        <Link href="/dashboard/settings">
+          <div className="glass-panel p-3 rounded-xl relative overflow-hidden cursor-pointer hover:bg-white/8 transition-colors group">
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-cyan-500/10" />
+            <div className="relative z-10 flex items-center gap-3">
+              <img
+                src={user?.avatar || "https://i.pravatar.cc/150?img=11"}
+                alt={user?.name || "User"}
+                className="w-9 h-9 rounded-full border border-white/20 shrink-0"
+              />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-white truncate capitalize">{user?.name || "Guest"}</p>
+                <p className="text-xs text-zinc-400 truncate">@{user?.username || "guest"}</p>
+              </div>
             </div>
           </div>
-        </div>
+        </Link>
+
+        {/* Logout */}
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-zinc-500 hover:text-red-400 hover:bg-red-400/5 transition-all text-sm font-medium"
+        >
+          <LogOut className="w-4 h-4" />
+          Sign out
+        </button>
       </div>
     </aside>
   );
 }
+

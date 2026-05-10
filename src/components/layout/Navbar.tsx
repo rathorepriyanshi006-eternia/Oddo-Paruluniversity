@@ -42,9 +42,11 @@ export function Navbar() {
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" className="text-zinc-300 hover:text-white hover:bg-white/10">
-              Log in
-            </Button>
+            <Link href="/login">
+              <Button variant="ghost" className="text-zinc-300 hover:text-white hover:bg-white/10">
+                Log in
+              </Button>
+            </Link>
             <Button className="bg-white text-indigo-950 hover:bg-zinc-200 transition-colors font-medium">
               Start Planning
             </Button>
@@ -70,9 +72,11 @@ export function Navbar() {
           <Link href="#how-it-works" className="block text-base font-medium text-zinc-300 py-2">How it Works</Link>
           <Link href="#pricing" className="block text-base font-medium text-zinc-300 py-2">Pricing</Link>
           <div className="pt-4 flex flex-col gap-2">
-            <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
-              Log in
-            </Button>
+            <Link href="/login" className="w-full">
+              <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+                Log in
+              </Button>
+            </Link>
             <Button className="w-full bg-gradient-to-r from-indigo-500 to-cyan-400 text-white border-0">
               Start Planning
             </Button>

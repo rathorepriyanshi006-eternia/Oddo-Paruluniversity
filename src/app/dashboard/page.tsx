@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Sparkles, Calendar, MapPin, ArrowUpRight, Wallet, Clock, Loader2 } from "lucide-react";
+import { Sparkles, Calendar, MapPin, ArrowUpRight, Wallet, Clock, Loader2, Plane, Navigation, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 
 export default function DashboardPage() {
   const [trips, setTrips] = useState<any[]>([]);
@@ -30,110 +31,119 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="space-y-8 pb-10">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div className="space-y-10 pb-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header section with Linear-like clean typography */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/5">
         <div>
-          <h1 className="text-3xl font-display font-bold text-white mb-2">Welcome back, Marcus</h1>
-          <p className="text-zinc-400">You have {trips.length} upcoming trips. Where to next?</p>
+          <h1 className="text-4xl font-display font-medium text-white tracking-tight mb-2">Welcome back.</h1>
+          <p className="text-zinc-400 text-lg">You have {trips.length} upcoming journeys planned.</p>
         </div>
         <Link href="/dashboard/generator">
-          <Button className="bg-white text-indigo-950 hover:bg-zinc-200 transition-colors rounded-xl font-semibold shadow-lg shadow-white/5">
-            <Sparkles className="w-4 h-4 mr-2 text-indigo-600" />
+          <Button className="bg-white text-zinc-950 hover:bg-zinc-200 transition-colors h-11 px-6 rounded-lg font-medium shadow-sm">
+            <Sparkles className="w-4 h-4 mr-2" />
             AI Trip Generator
           </Button>
         </Link>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid lg:grid-cols-12 gap-8">
         {/* Left Column: Stats & Upcoming */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="grid sm:grid-cols-3 gap-4">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-xl">
-              <CardContent className="p-4 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30">
-                  <MapPin className="w-6 h-6 text-indigo-400" />
+        <div className="lg:col-span-8 space-y-10">
+          
+          {/* Minimalist Stats */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Card className="bg-zinc-900/50 border-white/5 shadow-none rounded-2xl">
+              <CardContent className="p-5 flex flex-col gap-3">
+                <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center border border-white/5">
+                  <Plane className="w-4 h-4 text-zinc-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-400">Total Trips</p>
-                  <p className="text-2xl font-bold text-white">{loading ? <Loader2 className="w-4 h-4 animate-spin"/> : trips.length}</p>
+                  <p className="text-sm font-medium text-zinc-500 mb-1">Total Trips</p>
+                  <p className="text-3xl font-semibold text-white tracking-tight">
+                    {loading ? <Loader2 className="w-5 h-5 animate-spin mt-2 text-zinc-500" /> : trips.length}
+                  </p>
                 </div>
               </CardContent>
             </Card>
-            <Card className="bg-white/5 border-white/10 backdrop-blur-xl">
-              <CardContent className="p-4 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-cyan-500/20 flex items-center justify-center border border-cyan-500/30">
-                  <Wallet className="w-6 h-6 text-cyan-400" />
+            <Card className="bg-zinc-900/50 border-white/5 shadow-none rounded-2xl">
+              <CardContent className="p-5 flex flex-col gap-3">
+                <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center border border-white/5">
+                  <Wallet className="w-4 h-4 text-zinc-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-400">Avg Budget</p>
-                  <p className="text-2xl font-bold text-white">$1.2k</p>
+                  <p className="text-sm font-medium text-zinc-500 mb-1">Avg Budget</p>
+                  <p className="text-3xl font-semibold text-white tracking-tight">$1.2k</p>
                 </div>
               </CardContent>
             </Card>
-            <Card className="bg-white/5 border-white/10 backdrop-blur-xl">
-              <CardContent className="p-4 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-pink-500/20 flex items-center justify-center border border-pink-500/30">
-                  <Clock className="w-6 h-6 text-pink-400" />
+            <Card className="bg-zinc-900/50 border-white/5 shadow-none rounded-2xl">
+              <CardContent className="p-5 flex flex-col gap-3">
+                <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center border border-white/5">
+                  <Clock className="w-4 h-4 text-zinc-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-400">Days Traveled</p>
-                  <p className="text-2xl font-bold text-white">45</p>
+                  <p className="text-sm font-medium text-zinc-500 mb-1">Days Traveled</p>
+                  <p className="text-3xl font-semibold text-white tracking-tight">45</p>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-white">Upcoming Journeys</h2>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-medium text-white tracking-tight">Upcoming Journeys</h2>
               <Link href="/dashboard/trips">
-                <Button variant="link" className="text-cyan-400 p-0">View all <ArrowUpRight className="w-4 h-4 ml-1" /></Button>
+                <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white hover:bg-white/5">
+                  View all
+                </Button>
               </Link>
             </div>
             
             {loading ? (
-              <div className="flex justify-center p-10"><Loader2 className="w-8 h-8 text-cyan-400 animate-spin" /></div>
+              <div className="h-40 flex items-center justify-center border border-white/5 rounded-2xl bg-zinc-900/20">
+                <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
+              </div>
             ) : trips.length === 0 ? (
-              <div className="glass-panel p-10 text-center rounded-2xl border border-white/5">
-                <p className="text-zinc-400 mb-4">No trips planned yet.</p>
+              <div className="h-40 flex flex-col items-center justify-center border border-white/5 rounded-2xl bg-zinc-900/20 border-dashed">
+                <p className="text-zinc-500 mb-4">No trips planned yet.</p>
                 <Link href="/dashboard/generator">
-                  <Button className="bg-gradient-to-r from-indigo-500 to-cyan-400 text-white border-0">
-                    Create your first trip
+                  <Button variant="outline" className="border-white/10 text-white hover:bg-white/5">
+                    Plan your first trip
                   </Button>
                 </Link>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="grid gap-3">
                 {trips.map((trip, idx) => (
-                  <Link key={trip.id} href={`/builder/${trip.id}`} className="block">
+                  <Link key={trip.id} href={`/builder/${trip.id}`} className="block group">
                     <motion.div 
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: idx * 0.1 }}
-                      className="glass-panel p-4 rounded-2xl flex flex-col sm:flex-row gap-4 items-center group cursor-pointer hover:border-white/20 transition-all"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="bg-zinc-900/40 hover:bg-zinc-800/60 border border-white/5 hover:border-white/10 transition-all rounded-xl p-4 flex items-center justify-between"
                     >
-                      <div className="w-full sm:w-32 h-24 rounded-xl overflow-hidden relative bg-zinc-800">
-                        {trip.image && <img src={trip.image} alt={trip.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />}
-                      </div>
-                      <div className="flex-1 w-full">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-bold text-lg text-white group-hover:text-cyan-400 transition-colors">{trip.title}</h3>
-                          <div className="flex -space-x-2">
-                            {[...Array(trip.collaborators || 1)].map((_, i) => (
-                              <div key={i} className="w-6 h-6 rounded-full border-2 border-background bg-zinc-800 overflow-hidden">
-                                <img src={`https://i.pravatar.cc/100?img=${i + 20}`} alt="User" />
-                              </div>
-                            ))}
+                      <div className="flex items-center gap-5">
+                        <div className="w-16 h-16 rounded-lg overflow-hidden bg-zinc-800 border border-white/5 relative shrink-0">
+                          {trip.image && <img src={trip.image} alt={trip.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />}
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-white text-lg tracking-tight mb-1">{trip.title}</h3>
+                          <div className="flex items-center gap-3 text-sm text-zinc-500">
+                            <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> {new Date(trip.startDate).toLocaleDateString()}</span>
+                            <span className="w-1 h-1 rounded-full bg-zinc-700" />
+                            <span className="flex items-center gap-1.5"><Navigation className="w-3.5 h-3.5" /> {trip.destination}</span>
                           </div>
                         </div>
-                        <div className="flex items-center gap-4 text-sm text-zinc-400 mb-3">
-                          <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> {new Date(trip.startDate).toLocaleDateString()}</span>
-                          <span className="flex items-center gap-1 text-amber-400"><Clock className="w-4 h-4" /> {trip.daysLeft} days left</span>
+                      </div>
+                      
+                      <div className="hidden sm:flex items-center gap-6">
+                        <div className="text-right">
+                          <p className="text-sm font-medium text-white">{trip.daysLeft} days left</p>
+                          <div className="w-24 h-1.5 bg-zinc-800 rounded-full mt-2 overflow-hidden">
+                            <div className="h-full bg-zinc-400 rounded-full" style={{ width: `${trip.progress || 0}%` }} />
+                          </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <Progress value={trip.progress || 0} className="h-2 bg-white/10" />
-                          <span className="text-xs text-zinc-500 font-medium">{trip.progress || 0}% Planned</span>
-                        </div>
+                        <ChevronRight className="w-5 h-5 text-zinc-600 group-hover:text-zinc-300 transition-colors" />
                       </div>
                     </motion.div>
                   </Link>
@@ -143,38 +153,42 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Right Column: AI Recommendations & Trending */}
-        <div className="space-y-6">
-          <Card className="bg-gradient-to-br from-indigo-900/40 to-background border-indigo-500/20 backdrop-blur-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl" />
-            <CardContent className="p-6 relative z-10">
-              <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="w-5 h-5 text-indigo-400" />
-                <h2 className="font-bold text-white">AI Insights</h2>
+        {/* Right Column: Insights */}
+        <div className="lg:col-span-4 space-y-8">
+          <div className="rounded-2xl border border-white/5 bg-zinc-900/40 p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Sparkles className="w-4 h-4 text-zinc-400" />
+              <h2 className="font-medium text-white tracking-tight">AI Insights</h2>
+            </div>
+            <div className="space-y-4">
+              <div className="pb-4 border-b border-white/5">
+                <Badge variant="secondary" className="mb-2 bg-zinc-800 text-zinc-300 font-normal hover:bg-zinc-800">Price Drop</Badge>
+                <p className="text-sm text-zinc-400 leading-relaxed">
+                  Flights to Tokyo are historically low for your selected dates. Booking now could save you ~$150.
+                </p>
               </div>
-              <p className="text-sm text-zinc-300 mb-4 leading-relaxed">
-                Based on your saved "Swiss Alps Ski Trip", flight prices from JFK are dropping for early December. Book within the next 48 hours to save estimated $150.
-              </p>
-              <Button className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/5 transition-colors">
-                View Flight Deals
-              </Button>
-            </CardContent>
-          </Card>
+              <div>
+                <Badge variant="secondary" className="mb-2 bg-zinc-800 text-zinc-300 font-normal hover:bg-zinc-800">Weather Alert</Badge>
+                <p className="text-sm text-zinc-400 leading-relaxed">
+                  Expect light rain in Paris next week. Consider moving your Louvre visit to Tuesday afternoon.
+                </p>
+              </div>
+            </div>
+          </div>
 
           <div>
-            <h2 className="text-lg font-bold text-white mb-4">Trending Destinations</h2>
-            <div className="grid grid-cols-2 gap-3">
+            <h2 className="text-sm font-medium text-zinc-500 mb-4 uppercase tracking-wider">Trending Curations</h2>
+            <div className="grid gap-3">
               {[
-                { name: "Bali", image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&q=80&w=400" },
-                { name: "Reykjavik", image: "https://images.unsplash.com/photo-1476610182048-b716b8518aae?auto=format&fit=crop&q=80&w=400" },
-                { name: "Patagonia", image: "https://images.unsplash.com/photo-1578637387939-43c525550085?auto=format&fit=crop&q=80&w=400" },
-                { name: "Kyoto", image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=400" }
+                { name: "Kyoto Zen Gardens", type: "Culture", image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=400" },
+                { name: "Patagonia Trails", type: "Adventure", image: "https://images.unsplash.com/photo-1578637387939-43c525550085?auto=format&fit=crop&q=80&w=400" },
               ].map((dest, i) => (
-                <div key={i} className="relative rounded-xl overflow-hidden aspect-square group cursor-pointer">
-                  <img src={dest.image} alt={dest.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute bottom-3 left-3">
-                    <p className="text-white font-medium text-sm">{dest.name}</p>
+                <div key={i} className="group relative rounded-xl overflow-hidden h-24 cursor-pointer border border-white/5">
+                  <img src={dest.image} alt={dest.name} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                  <div className="absolute bottom-3 left-4">
+                    <p className="text-white font-medium text-sm tracking-tight">{dest.name}</p>
+                    <p className="text-xs text-zinc-400">{dest.type}</p>
                   </div>
                 </div>
               ))}

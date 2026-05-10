@@ -1,30 +1,55 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { trips, activities } from "@/lib/db/schema";
-import { eq, asc } from "drizzle-orm";
+import { supabase } from "@/lib/supabase";
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
     const tripId = params.id;
-    
-    const tripData = await db.select().from(trips).where(eq(trips.id, tripId)).limit(1);
-    
-    if (tripData.length === 0) {
+
+    const { data: tripData, error } = await supabase
+      .from('trips')
+      .select('*')
+      .eq('id', tripId)
+      .single();
+
+    if (error || !tripData) {
       return NextResponse.json({ success: false, error: "Trip not found" }, { status: 404 });
     }
 
-    const tripActivities = await db.select().from(activities)
-      .where(eq(activities.tripId, tripId))
-      .orderBy(asc(activities.orderIndex));
+    // Fetch activities for this trip
+    const { data: activitiesData } = await supabase
+      .from('activities')
+      .select('*')
+      .eq('trip_id', tripId)
+      .order('order_index', { ascending: true });
 
-    return NextResponse.json({ 
-      success: true, 
-      data: {
-        ...tripData[0],
-        activities: tripActivities
-      } 
-    });
+    // Map activities to camelCase
+    const activities = (activitiesData || []).map((a: any) => ({
+      id: a.id,
+      tripId: a.trip_id,
+      day: a.day,
+      type: a.type,
+      title: a.title,
+      time: a.time,
+      orderIndex: a.order_index,
+    }));
+
+    const trip = {
+      id: tripData.id,
+      ownerId: tripData.user_id,
+      title: tripData.title,
+      destination: tripData.destination,
+      startDate: tripData.start_date,
+      endDate: tripData.end_date,
+      budgetTotal: tripData.budget,
+      image: tripData.cover_image_url,
+      status: tripData.status,
+      createdAt: tripData.created_at,
+      activities,
+    };
+
+    return NextResponse.json({ success: true, data: trip });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
+
